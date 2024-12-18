@@ -1,36 +1,20 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Router
+import UserRoute from './routes/userRoute';
+import AdminRoute from './routes/adminRoute';
+import Signup from './components/user/signup'
+import './App.css';
 
-import './App.css'
-import { BrowserRouter,Routes,Route } from 'react-router-dom'
-import UserSignup from './components/user/signup'
-import OTPVerification from './components/user/userOtp'
-import UserHome from './components/user/home'
-import ProductDetail from './components/user/productOverview'
-import UserLogin from './components/user/login'
-import AdminLogin from './components/admin/adminLogin'
-import AdminDashboard from './components/admin/dashboard'
 function App() {
-
   return (
-    <>
-      <BrowserRouter>
-      
+    <Router>  {/* Wrap everything inside Router */}
       <Routes>
-       
-            
-      <Route path='/' element={<UserSignup/>}/>
-      <Route path='/otp' element ={<OTPVerification/>} />
-      <Route path='/home' element={<UserHome/>}/>
-      <Route path='/product' element={<ProductDetail/>} />
-      <Route path='/login' element={<UserLogin/>}/>
-      <Route path='/admin' element={<AdminLogin/>}/>
-      <Route path='/dashboard' element={<AdminDashboard/>}/>
-      
+      <Route path="/" element={<Signup />} /> {/* Add route for the home page */}
 
+        <Route path="/user/*" element={<UserRoute />} />
+        <Route path="/admin/*" element={<AdminRoute />} />
       </Routes>
-     
-      </BrowserRouter>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
