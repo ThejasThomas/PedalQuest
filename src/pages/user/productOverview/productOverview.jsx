@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Star, ShoppingCart, Heart } from "lucide-react"
-import { Button } from "../../components/UI/index.js"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/UI/tabs.jsx"
-import relatedproductImg1 from '../../assets/images/Logo.png'
+import { Button } from "../../../components/UI/index.js"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/UI/tabs.jsx"
+import relatedproductImg1 from '../../../assets/images/Logo.png'
 
 export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0)

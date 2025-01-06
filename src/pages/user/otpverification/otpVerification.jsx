@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../../../assets/images/Logo.png";
-import { axiosInstance } from "../../api/axiosInstance";
+import { axiosInstance } from "../../../api/axiosInstance";
 
 const OTPVerification = () => {
   const location = useLocation();
@@ -59,7 +59,7 @@ const OTPVerification = () => {
 
       if (response.data.success) {
         setMessage("OTP Verified Successfully");
-        navigate("/home");
+        navigate("/user/home");
       }
     } catch (err) {
       setError(err.response?.data?.message || "OTP Verification Failed");

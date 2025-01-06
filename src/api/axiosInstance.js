@@ -9,5 +9,12 @@ const axiosInstance = axios.create({
 	},
 	withCredentials: true,
 });
+const axiosMultipartInstance = axios.create({
+	baseURL,
+	headers: {
+		"Content-Type": "multipart/form-data",
+	},
+	withCredentials: true,
+});
 
-export { axiosInstance }
+export { axiosInstance,axiosMultipartInstance }

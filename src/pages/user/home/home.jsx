@@ -1,17 +1,17 @@
 import React from 'react';
-import Header from './Header';
-import Footer from '../../components/user/Footer';
-import product1 from '../../assets/images/img1.png';
-import product2 from '../../assets/images/img2.png';
-import product3 from '../../assets/images/img3.png';
-import product4 from '../../assets/images/1.boot.png';
-import product5 from '../../assets/images/1.jacket.png';
-import product6 from '../../assets/images/1.glove.png';
-import product7 from '../../assets/images/1.bag.png';
-import logo1 from '../../assets/images/INOXTO.png';
-import logo2 from '../../assets/images/CAIRBULL.png';
-import logo3 from '../../assets/images/ROCKBROS.png';
-import logo4 from '../../assets/images/WINDBREAKER.jpg';
+import Header from '../../../components/user/Header';
+import Footer from '../../../components/user/Footer';
+import product1 from '../../../assets/images/img1.png';
+import product2 from '../../../assets/images/img2.png';
+import product3 from '../../../assets/images/img3.png';
+import product4 from '../../../assets/images/1.boot.png';
+import product5 from '../../../assets/images/1.jacket.png';
+import product6 from '../../../assets/images/1.glove.png';
+import product7 from '../../../assets/images/1.bag.png';
+import logo1 from '../../../assets/images/INOXTO.png';
+import logo2 from '../../../assets/images/CAIRBULL.png';
+import logo3 from '../../../assets/images/ROCKBROS.png';
+import logo4 from '../../../assets/images/WINDBREAKER.jpg';
 
 const HomePage = () => {
   

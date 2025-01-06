@@ -52,14 +52,14 @@ const OTPVerification = () => {
       setError("");
       setMessage("");
 
-      const response = await axios.post("http://localhost:3000/user/verifyOtp", {
+      const response = await axiosInstance.post('/user/verifyOtp',{
         email,
         otp: otpCode,
       });
 
       if (response.data.success) {
         setMessage("OTP Verified Successfully");
-        navigate("/home");
+        navigate("/user/home");
       }
     } catch (err) {
       setError(err.response?.data?.message || "OTP Verification Failed");

@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Eye, EyeOff, User } from 'lucide-react'
-import { Button } from "../UI/button"
-import { Input } from "../UI/input"
+import { Button } from "../../../components/UI/button"
+import { Input } from "../../../components/UI/input"
 import { toast } from 'react-toastify'
-import loginImg from '../../assets/images/loginImg.jpg'
-import logo from '../../assets/images/Logo.png'
-import googleLogo from '../../assets/images/Google_logo.png'
+import loginImg from '../../../assets/images/loginImg.jpg'
+import logo from '../../../assets/images/Logo.png'
+import googleLogo from '../../../assets/images/Google_logo.png'
 import { useNavigate } from 'react-router-dom'
-import { axiosInstance } from '../../api/axiosInstance'
+import { axiosInstance } from '../../../api/axiosInstance'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -47,7 +47,7 @@ export default function Login() {
       const response = await axiosInstance.post('/user/login', formData)
       if (response.data.success) {
         toast.success('Login successful')
-        navigate('/home')
+        navigate('/user/home')
       }
     } catch (error) {
       console.error('Error during login:', error.response?.data?.message || error.message)

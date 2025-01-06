@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../api/axiosInstance";
-import logo from "../../assets/images/Logo.png";
-import signImg from '../../assets/images/signupImg.avif'
+import { axiosInstance } from "../../../api/axiosInstance";
+import logo from "../../../assets/images/Logo.png";
+import signImg from '../../../assets/images/signupImg.avif'
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -79,7 +79,7 @@ export default function SignupForm() {
       const response = await axiosInstance.post("/user/signup", formData);
       if (response.data.success) {
         alert("OTP sent successfully to your email.");
-        navigate("/otp", { state: { email: formData.email } });
+        navigate("/user/otp", { state: { email: formData.email } });
       } else {
         alert(response.data.message || "Failed to send OTP.");
       }

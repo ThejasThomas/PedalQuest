@@ -27,14 +27,14 @@ export function DashboardPage() {
         <div className="lg:col-span-2 bg-white/5 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-white mb-4">Revenue Chart</h3>
           <div className="h-[300px] flex items-center justify-center text-gray-400">
-            Chart Component Goes Here
+            Chart Component Goes Here 
           </div>
         </div>
         
         <div className="bg-white/5 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-white mb-4">Most Sold Items</h3>
           <div className="space-y-4">
-            {['Helmet', 'Jacket', 'Boots', 'Gloves', 'Bag'].map((item, index) => (
+            {['Helmet', 'Jacket', 'Boots', 'Gloves','Bag'].map((item, index) => (
               <div key={item} className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">{item}</span>
