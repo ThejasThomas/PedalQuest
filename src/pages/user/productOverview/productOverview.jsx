@@ -1,130 +1,107 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
 import { Star, ShoppingCart, Heart } from "lucide-react"
 import { Button } from "../../../components/UI/index.js"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/UI/tabs.jsx"
-import relatedproductImg1 from '../../../assets/images/Logo.png'
+import axios from "axios"
+import { axiosInstance } from "../../../api/axiosInstance.js"
 
 export default function ProductDetail() {
+  const { id } = useParams()
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [sideImages, setSideImages] = useState([])
 
-  const images = [
-    "/assets/images/1.jacket.png?height=400&width=400",
-    "/placeholder.svg?height=400&width=400",
-    "/placeholder.svg?height=400&width=400",
-    "/placeholder.svg?height=400&width=400"
-  ]
-
-  const relatedProducts = [
-    {
-      name: "Sports Helmet Model Racing",
-      price: "₹2,770.00",
-      image: "/assets/images/1.jacket.png?height=100&width=100"
-    },
-    {
-      name: "Axor Hunter Solid Helmet",
-      price: "₹3,770.00",
-      image: "/placeholder.svg?height=100&width=100"
-    },
-    {
-      name: "LS2 MUKT7 Full Eco Rear",
-      price: "₹4,770.00",
-      image: "/placeholder.svg?height=100&width=100"
-    },
-    {
-      name: "Basic Race motorcycle jacket",
-      price: "₹5,770.00",
-      image: "/placeholder.svg?height=100&width=100"
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        const response = await axiosInstance.get(`/admin/productDetails/${id}`)
+        
+        if (response.data.success) {
+          setProduct(response.data.product)
+         
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    if (id) {
+      fetchData()
+    }
+  }, [id])
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+  }
+
+  if (!product) {
+    return <div className="min-h-screen flex items-center justify-center">Product not found</div>
+  }
+  const thumbnailImages = product.images.slice(0, 3)
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
       <nav className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <img 
-            src={relatedproductImg1}
-            alt="Logo" 
-            width={120} 
-            height={40}
-          />
           <div className="flex items-center gap-6">
-            <a href="#" className="text-sm font-medium">Home</a>
-            <a href="#" className="text-sm font-medium">Shop</a>
-            <a href="#" className="text-sm font-medium">About Us</a>
-            <a href="#" className="text-sm font-medium">Contact Us</a>
+            <a href="/" className="text-sm font-medium">Home</a>
+            <a href="/shop" className="text-sm font-medium">Shop</a>
+            <a href="/about" className="text-sm font-medium">About Us</a>
+            <a href="/contact" className="text-sm font-medium">Contact Us</a>
           </div>
         </div>
       </nav>
 
-      {/* Product Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Product Images */}
-          <div className="space-y-4">
-            <div className="aspect-square relative border rounded-lg overflow-hidden">
-              <img
-                src={images[selectedImage]}
-                alt="Product image"
-                className="object-cover w-full h-full"
-              />
-            </div>
-
-            <div className="grid grid-cols-4 gap-4">
-              {images.map((image, index) => (
+          <div className="flex gap-6">
+            {/* Thumbnail Images - Left Side */}
+            <div className="flex flex-col gap-4">
+              {thumbnailImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
-                  className={`aspect-square relative border rounded-lg overflow-hidden ${
-                    selectedImage === index ? "ring-2 ring-primary" : ""
-                  }`}
+                  className={`
+                    w-20 aspect-square relative border rounded-lg overflow-hidden
+                    transition-all duration-200 hover:ring-2 hover:ring-primary/50
+                    ${selectedImage === index ? 'ring-2 ring-primary' : ''}
+                  `}
                 >
                   <img
                     src={image}
-                    alt={`Product thumbnail ${index + 1}`}
+                    alt={`${product.name} view ${index + 1}`}
                     className="object-cover w-full h-full"
                   />
                 </button>
               ))}
             </div>
+
+            {/* Main Product Image - Right Side */}
+            <div className="flex-1">
+              <div className="aspect-square relative border rounded-lg overflow-hidden">
+                <img
+                  src={product.images[selectedImage]}
+                  alt={product.name}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Product Info */}
           <div className="space-y-6">
-            <h1 className="text-3xl font-bold">Axor Hunter Solid Helmet</h1>
-            <div className="flex items-center gap-2">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-5 h-5 ${
-                      i < 4 ? "fill-primary text-primary" : "fill-muted text-muted-foreground"
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground">(126 reviews)</span>
-            </div>
-            <p className="text-2xl font-bold">₹3,770.00</p>
+            <h1 className="text-3xl font-bold">{product.name}</h1>
+            <p className="text-2xl font-bold">₹{product.basePrice.toFixed(2)}</p>
 
-            {/* Color Selection */}
+            {/* Quantity Selector */}
             <div className="space-y-2">
-              <h3 className="font-medium">Color</h3>
-              <div className="flex gap-2">
-                {["black", "white", "gray"].map((color) => (
-                  <button
-                    key={color}
-                    className={`w-8 h-8 rounded-full border bg-${color}`}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Quantity */}
-            <div className="space-y-2">
-              <h3 className="font-medium">QTY</h3>
+              <h3 className="font-medium">Quantity</h3>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
@@ -144,7 +121,7 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* Actions */}
+            {/* Action Buttons */}
             <div className="flex gap-4">
               <Button className="flex-1">
                 <ShoppingCart className="w-4 h-4 mr-2" />
@@ -154,6 +131,12 @@ export default function ProductDetail() {
                 <Heart className="w-4 h-4 mr-2" />
                 Add to Wishlist
               </Button>
+            </div>
+
+            {/* Product Description */}
+            <div className="mt-6">
+              <h3 className="font-medium mb-2">Description</h3>
+              <p className="text-muted-foreground">{product.description}</p>
             </div>
           </div>
         </div>
@@ -167,44 +150,14 @@ export default function ProductDetail() {
             </TabsList>
             <TabsContent value="details" className="mt-4">
               <div className="prose max-w-none">
-                <h3>Axor Hunter Solid Helmet / Motocross Helmet Features:</h3>
-                <p>
-                  If you are a Motocross, a Moto Country or an Endure racer and you do thrill riding you need serious
-                  equipment etc. the FAST EVO MX637 delivers! The Fast Evo MX637 was developed for professional off
-                  road use in collaboration with our ESE riders from the Cross, Enduro and Supermotard Championship
-                  Series.
-                </p>
+                <h3>{product.name} Features:</h3>
+                <p>{product.description}</p>
               </div>
             </TabsContent>
             <TabsContent value="reviews" className="mt-4">
-              <p>Customer reviews will be displayed here.</p>
+              <p>No reviews yet.</p>
             </TabsContent>
           </Tabs>
-        </div>
-
-        {/* Related Products */}
-        <div className="mt-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Related Products</h2>
-            <Button variant="outline">SHOW MORE</Button>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {relatedProducts.map((product, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="aspect-square relative mb-2 rounded-lg overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="object-cover group-hover:scale-105 transition-transform"
-                    width={100}
-                    height={100}
-                  />
-                </div>
-                <h3 className="font-medium">{product.name}</h3>
-                <p className="text-sm text-muted-foreground">{product.price}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -235,15 +188,8 @@ export default function ProductDetail() {
             </ul>
           </div>
           <div>
-            <img 
-              src="/placeholder.svg?height=40&width=120" 
-              alt="Logo" 
-              width={120} 
-              height={40}
-              className="mb-4"
-            />
             <p className="text-sm text-muted-foreground">
-              ©2023 all Right Reserved. Terms of Use. Website.com
+              ©2024 all Right Reserved. Terms of Use. Website.com
             </p>
           </div>
         </div>

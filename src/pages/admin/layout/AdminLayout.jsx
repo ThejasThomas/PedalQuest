@@ -5,9 +5,9 @@ import { Outlet } from 'react-router-dom';
 
 export function AdminLayout( ) {
   return (
-    <div className="flex min-h-screen bg-black">
+    <div className="flex min-h-screen w-full bg-black">
       <Sidebar />
-    <div className='admin-content'>
+    <div className='flex-1 overflow-x-hidden'>
       <Outlet/>
 
     </div>

@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/solid";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { TrashIcon } from "lucide-react";
 
 export default function EditProductPage() {
   const { productId } = useParams();
@@ -81,11 +82,17 @@ export default function EditProductPage() {
   };
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    
+    if (productData.images.length + files.length > 4) {
+      alert("You can only upload up to 4 images");
+      return;
+    }
+
+    for (const file of files) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setImagePreview(prev => [...prev, reader.result]);
       };
       reader.readAsDataURL(file);
 
@@ -96,22 +103,24 @@ export default function EditProductPage() {
 
         const response = await axios.post(
           `https://api.cloudinary.com/v1_1/pedalquest/image/upload`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
+          formData
         );
         const imageUrl = response.data.secure_url;
         setProductData((prevState) => ({
           ...prevState,
-          images: imageUrl,
+          images: [...prevState.images, imageUrl],
         }));
       } catch (error) {
         console.error("Error uploading image:", error);
       }
     }
+  };
+  const removeImage = (index) => {
+    setProductData(prevState => ({
+      ...prevState,
+      images: prevState.images.filter((_, i) => i !== index),
+    }));
+    setImagePreview(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
@@ -254,43 +263,49 @@ export default function EditProductPage() {
             {/* Media */}
             <div className="bg-gray-800 rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4">Media</h2>
-              <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-                {imagePreview ? (
-                  <div className="relative">
-                    <img
-                      src={imagePreview}
-                      alt="Product preview"
-                      className="max-h-48 mx-auto"
-                    />
-                    <button
-                      onClick={() => {
-                        setImagePreview("");
-                        setProductData(prev => ({ ...prev, images: "" }));
-                      }}
-                      className="absolute top-2 right-2 bg-red-500 p-1 rounded-full"
-                    >
-                      <XIcon className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <input
-                      type="file"
-                      name="image"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="upload-image"
-                    />
-                    <label htmlFor="upload-image" className="cursor-pointer">
-                      <PlusIcon className="h-12 w-12 mx-auto text-gray-400" />
-                      <p className="mt-2 text-gray-400">
-                        Drag and drop image here, or click to add image
-                      </p>
-                    </label>
-                  </>
-                )}
+              <div className="border-2 border-dashed border-gray-600 rounded-lg p-8">
+                <input
+                  type="file"
+                  multiple
+                  name="images"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="upload-image"
+                  accept="image/*"
+                />
+                <label htmlFor="upload-image" className="cursor-pointer block text-center">
+                  <PlusIcon className="h-12 w-12 mx-auto text-gray-400" />
+                  <p className="mt-2 text-gray-400">
+                    Drag and drop images here, or click to add images (max 4)
+                  </p>
+                </label>
+
+                {/* Image Preview Grid */}
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  {productData.images.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image}
+                        alt={`Product ${index + 1}`}
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+                      <button
+                        onClick={() => removeImage(index)}
+                        className="absolute top-2 right-2 p-1 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <TrashIcon className="h-5 w-5 text-white" />
+                      </button>
+                      {index === 0 && (
+                        <span className="absolute bottom-2 left-2 bg-blue-500 text-white px-2 py-1 rounded text-sm">
+                          Main Image
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
+
 
             {/* Pricing and Offer Setting */}
             <div className="bg-gray-800 rounded-lg p-6">

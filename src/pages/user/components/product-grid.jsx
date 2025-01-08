@@ -3,11 +3,13 @@ import { Card, CardContent } from "../../../components/UI/card";
 import { Button } from "../../../components/UI/button";
 import { Heart, ImageOff } from "lucide-react";
 import { axiosInstance } from '../../../api/axiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 const ProductGrid = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate=useNavigate()
 
   useEffect(() => {
     fetchProducts();
@@ -16,7 +18,7 @@ const ProductGrid = () => {
   const fetchProducts = async () => {
     try {
       const { data } = await axiosInstance.get('/user/products');
-      console.log('Products data:', data); // For debugging
+      console.log('Products data:', data);
       if (data.success) {
         setProducts(data.products);
       } else {
@@ -29,12 +31,14 @@ const ProductGrid = () => {
     }
   };
 
-  // Helper function to get the first image from the images array
   const getProductImage = (product) => {
     if (product.images && product.images.length > 0) {
       return product.images[0];
     }
     return null;
+  };
+  const handleImageClick =(productId) =>{
+    navigate(`/user/product/${productId}`)
   };
 
   if (loading) {
@@ -67,7 +71,8 @@ const ProductGrid = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <Card key={product._id} className="overflow-hidden">
-              <div className="relative aspect-square">
+              <div className="relative aspect-square"
+              onClick={()=>handleImageClick(product._id)}>
                 {getProductImage(product) ? (
                   <img
                     src={getProductImage(product)}

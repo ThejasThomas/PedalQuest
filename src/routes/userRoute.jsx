@@ -13,7 +13,7 @@ function UserRoute() {
       <Route path="/login" element={<UserLogin />} />
       <Route path="/otp" element={<OTPVerification />} />
       <Route path="/home" element={<UserHome />} />
-      <Route path="/product" element={<ProductDetail />} />
+      <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/store" element={<Store />} />
     </Routes>
   );
